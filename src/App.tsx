@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import './index.css';
 
@@ -80,8 +80,15 @@ const App: React.FC = () => {
   // Check for Win
   useEffect(() => {
     if (unlockedPieces.length === TOTAL_PIECES && !gameWon && gameStarted) {
-      setGameWon(true);
+      // Bắn pháo hoa ngay lập tức
       confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+      
+      // Đợi 2 giây mới hiện màn hình thông báo thắng cuộc
+      const timer = setTimeout(() => {
+        setGameWon(true);
+      }, 2000);
+
+      return () => clearTimeout(timer);
     }
   }, [unlockedPieces, gameWon, gameStarted]);
 
